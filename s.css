@@ -1,0 +1,47 @@
+body, html {
+            height: 100%;
+            margin: 0;
+        }
+
+        #content {
+            display: flex;
+            height: 100vh;
+        }
+
+        #text {
+            flex: 1;
+            padding: 20px;
+        }
+
+        #map {
+            flex: 1;
+            height: 100%;
+        }
+
+
+h1 {
+    position: relative;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background-color: RGB(255,192,203);
+    text-align: center;
+}
+footer {
+        text-align: center;
+        background-color: #FFCCCB;
+        
+table {
+            
+            border-collapse: collapse;
+            width: 80%;
+        }
+th, td {
+            border: 1px solid #ddd;
+            padding: 0px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #FFCCCB;
+        }

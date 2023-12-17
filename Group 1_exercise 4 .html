@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <h1>
+    <a href="https://en.wikipedia.org/wiki/East_Frisian_Islands" style="color: black;">
+      <center> East Frisian Islands</center>
+    </a>
+  </h1>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+    integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+    crossorigin="">
+  <link rel="stylesheet" href="s.css">
+</head>
+
+<body>
+  <div id="content">
+    <div id="text">
+      <h4>
+        <p style="font-size:100%;margin-left:-100;  margin-right:-100; margin-top:-100; text-align:center;">The East
+          Frisian Islands (German: Ostfriesische Inseln, West Frisian: Eastfryske eilannen, Saterland Frisian:
+          Aastefräiske Ailounds) are a chain of islands in the North Sea, off the coast of East Frisia in Lower Saxony,
+          Germany. The islands extend for some 90 kilometres (56 mi) from west to east between the mouths of the Ems and
+          Jade / Weser rivers and lie about 3.5 to 10 km offshore. Between the islands and the mainland are extensive
+          mudflats, known locally as Watten, which form part of the Wadden Sea. In front of the islands are Germany's
+          territorial waters, which occupy a much larger area than the islands themselves. The islands, the surrounding
+          mudflats and the territorial waters (The Küstenmeer vor den ostfriesischen Inseln nature reserve) form a close
+          ecological relationship. The island group makes up about 5% of the Lower Saxony Wadden Sea National Park.
+
+          The largest island by surface area is Borkum, located at the western end of the chain; the other six inhabited
+          islands are from west to east: Juist, Norderney with the largest town in the islands, Baltrum, Langeoog,
+          Spiekeroog and Wangerooge. There are also four other small, uninhabited islands: Lütje Hörn east of Borkum,
+          Memmert and Kachelotplate southwest of Juist, Minsener Oog, a dredged island southeast of Wangerooge, and
+          Mellum at the eastern end of the island chain which, following the boundary revision by the Federal Office for
+          Nature Conservation, no longer belongs to the East Frisian Islands, but to the mudflats of the Elbe-Weser
+          Triangle (Watten im Elbe-Weser-Dreieck). (source: wikipedia)</p>
+      </h4>
+    </div>
+    <div id="map"></div>
+  </div>
+
+  <footer>
+    <center>
+      <table>
+        <tr>
+          <th>
+            <p style="margin-left: 0px"> Name</p>
+          </th>
+          <th>
+            <p style="margin-left: 25px"> Matriculation number</p>
+          </th>
+          <th>
+            <p style="margin-left: 10px">
+              Email-address
+            </p>
+          </th>
+        </tr>
+        <tr>
+          <td>Mohit Gaywali</td>
+          <td>
+            <p style="margin-left: 14px">10047682</p>
+          </td>
+          <td><a href="https://gmail.com" style="margin-left: 25px">mohit484824@gmail.com</a></td>
+        </tr>
+        <tr>
+          <td>Shiva Timilsina</td>
+          <td>
+            <p style="margin-left: 14px">10043211</p>
+          </td>
+          <td><a href="https://gmail.com" style="margin-left: 25px">sktimilsina2007@gmail.com</a></td>
+        </tr>
+        <tr>
+          <td>Leeya Koithara</td>
+          <td>
+            <p style="margin-left: 14px">10048468</p>
+          </td>
+          <td><a href="https://gmail.com" style="margin-left: 25px">leeya@gmail.com</a></td>
+        </tr>
+      </table>
+    </center>
+  </footer>
+  <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+    integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+    crossorigin=""></script>
+  <script src="https://code.jquery.com/jquery-3.6.1.js"></script>
+
+  <script>
+    // Leaflet Map Initialization
+    var base = L.tileLayer('https://tile.osm.ch/switzerland/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">Schweiz</a> contributors',
+    });
+
+    var base1 = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+      maxZoom: 17,
+      attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+    });
+    var map = L.map('map', {
+      zoom: 10,
+      layers: [base, base1]
+    }).setView([53.705, 7.276], 10);
+
+    // Add a marker to the map
+    var marker = L.marker([53.71, 7.28]);
+    marker.bindPopup("A marker on the map.").addTo(map);
+
+    // Add a polygon to the map
+    var polygon = L.polygon([
+      [53.72, 7.27],
+      [53.72, 7.29],
+      [53.73, 7.28]
+    ]);
+    polygon.bindPopup("A polygon on the map.").addTo(map);
+
+    // Import the countries XML and JSON data
+    $.getScript("https://igis.ikg.uni-hannover.de/public/countries.js", function () {
+      // XML Parsing
+      function parseXML(xml) {
+        var tmp = [];
+        $(xml).find("Feature").each(function () {
+          var geometry = $(this).find("Geometry").text();
+          tmp.push(JSON.parse(geometry));
+        });
+
+        // Create a Polygon Layer using the parsed geometry information
+        var layer = L.polygon(tmp, { color: "green" }).addTo(map);
+      }
+
+      // JSON Parsing
+      function parseJSON(json) {
+        // Create a GeoJSON Layer directly
+        var layer = L.geoJSON(JSON.parse(json), {
+          style: function (feature) {
+            // Define styles based on properties of the features
+            return {
+              fillColor: getColor(feature.properties),
+              weight: 2,
+              opacity: 1,
+              color: 'white',
+              dashArray: '3',
+              fillOpacity: 0.7
+            };
+          },
+          onEachFeature: function (feature, layer) {
+            // Add mouseover and mouseout event handlers
+            layer.on({
+              mouseover: highlightFeature,
+              mouseout: resetHighlight
+            });
+          }
+        }).addTo(map);
+      }
+
+      // Get color based on a property value
+      function getColor(value) {
+        // Define your color logic here
+        return value > 1000 ? 'red' :
+          value > 500 ? 'orange' :
+            'yellow';
+      }
+
+      // Highlight a feature on mouseover
+      function highlightFeature(e) {
+        var layer = e.target;
+        layer.setStyle({
+          weight: 5,
+          color: '#666',
+          dashArray: '',
+          fillOpacity: 0.7
+        });
+      }
+
+      // Reset the highlight on mouseout
+      function resetHighlight(e) {
+        var layer = e.target;
+        layer.setStyle({
+          weight: 2,
+          opacity: 1,
+          color: 'white',
+          dashArray: '3',
+          fillOpacity: 0.7
+        });
+      }
+
+      // Call the XML parsing function
+      parseXML(countries_xml);
+
+      // Call the JSON parsing function
+      parseJSON(countries_json);
+    });
+  </script>
+</body>
+
+</html>

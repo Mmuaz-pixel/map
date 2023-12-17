@@ -1,0 +1,113 @@
+<html>
+<head>
+  <title>Internet-GIS Task 4</title>
+  <style>
+	header {
+		background-color:lightgreen;
+		color:black;
+		text-align:center;
+		padding:5px;	
+	}
+	
+	footer {
+		background-color:lightgreen;
+		color:black;
+		clear:both;
+		text-align:center;
+		width: 100%;
+		padding:5px;	 	 
+	}	
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+</head>
+<body>
+
+	<header>
+	<h1>Leaflet</h1>
+	</header>
+	<section>
+	<div id="text" style="width:30%; float:left;">
+			Earth is the third planet from the Sun, the densest planet in the Solar System, the largest of the Solar System's four terrestrial planets, and the only astronomical object known to harbor life. The earliest life on Earth arose at least 3.5 billion years ago. Earth's biodiversity has expanded continually except when interrupted by mass extinctions. Although scholars estimate that over 99 percent of all species of life (over five billion) that ever lived on Earth are extinct, there are still an estimated 10–14 million extant species, of which about 1.2 million have been documented and over 86 percent have not yet been described. Over 7.3 billion humans live on Earth and depend on its biosphere and minerals for their survival. Earth's human population is divided among about two hundred sovereign states which interact through diplomacy, conflict, travel, trade and communication media. (Wikpedia) </div>			
+	<div id="mymap" style="height:400px; width:40%">
+	<script>
+		var mymap = L.map('mymap', {center:[52.375, 9.732],zoom:12 });
+		L.control.scale().addTo(mymap);
+
+		var layer1 = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		id: 'grundkarte'}).addTo(mymap);
+		var layer2 = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+		id: 'topo'});
+
+		var baseLayers = {
+		"Grundkarte": layer1,
+		"Topokarte": layer2
+		};
+
+		L.control.layers(baseLayers).addTo(mymap);
+		L.marker([52.385167, 9.712228]).addTo(mymap).bindPopup("Stadtbahnhaltestelle Schneiderberg/Wilhelm-Busch-Museum");
+		L.circleMarker([52.368409,9.718878],{radius:20}).addTo(mymap).bindPopup("Hier wohnt jemand");
+	
+
+		/* Ändern des Textes bei mouseover und mouseout*/
+		mymap.on('mouseover', function(anzeigen) {
+		var display = document.getElementById('text');
+		display.innerHTML = "";
+		display.innerHTML = "Diese Karte ist über Leaflet erstellt.";
+		});
+		
+		mymap.on('mouseout', function(ausblenden) {
+			var display = document.getElementById('text');
+			display.innerHTML = "";
+			display.innerHTML = "Earth is the third planet from the Sun, the densest planet in the Solar System, the largest of the Solar System's four terrestrial planets, and the only astronomical object known to harbor life. The earliest life on Earth arose at least 3.5 billion years ago. Earth's biodiversity has expanded continually except when interrupted by mass extinctions. Although scholars estimate that over 99 percent of all species of life (over five billion) that ever lived on Earth are extinct, there are still an estimated 10–14 million extant species, of which about 1.2 million have been documented and over 86 percent have not yet been described. Over 7.3 billion humans live on Earth and depend on its biosphere and minerals for their survival. Earth's human population is divided among about two hundred sovereign states which interact through diplomacy, conflict, travel, trade and communication media. (Wikpedia)";
+			});
+			
+			var popup = L.popup();
+
+			function onMapClick(e) {
+				popup
+					.setLatLng(e.latlng)
+					.setContent(e.latlng.toString())
+					.openOn(mymap);
+			}
+
+			mymap.on('click', onMapClick);
+				
+			var ZoomViewer = L.Control.extend({
+			onAdd: function(){
+				var gauge = L.DomUtil.create('div');
+				gauge.style.width = '100px';
+				gauge.style.background = 'rgba(255,255,255,0.5)';
+				gauge.style.textAlign = 'left';
+				mymap.on('zoomstart zoom zoomend', function(ev){
+					gauge.innerHTML = 'Zoom level: ' + mymap.getZoom();})
+					return gauge;}
+					});
+					(new ZoomViewer).addTo(mymap);
+			
+					
+				var BoundViewer = L.Control.extend({
+				onAdd: function(){
+				var gauge1 = L.DomUtil.create('div');
+					gauge1.style.width = '350px';
+					gauge1.style.background = 'rgba(255,255,255,0.5)';
+					gauge1.style.textAlign = 'left';
+					mymap.on('zoomstart zoom zoomend moveend', function(bounds){
+					b = mymap.getBounds();
+					gauge1.innerHTML ='Nordwest: ' + b.getNorthWest().lat + ', ' + b.getNorthWest().lng +
+					'<br>Nordost: ' + b.getNorthEast().lat +', ' + b.getNorthEast().lng +'<br>Südwest: ' +
+					b.getSouthWest().lat +', ' +b.getSouthWest().lng + '<br>Südost: ' + b.getSouthEast().lat +', ' + b.getSouthEast().lng;})
+					return gauge1;}
+					});
+					(new BoundViewer).addTo(mymap);
+						
+	</script>
+	</div>
+	<div id="neuertext"> </div>
+</section>
+
+	
+
+	<footer>Copyright D. Fitzner, edited by <a href="mailto:paulalippmann@t-online.de">Paula Lippmann </a></footer>
+</body>
+</html>
