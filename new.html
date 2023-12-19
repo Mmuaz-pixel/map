@@ -142,7 +142,7 @@
             tempMarker.bindPopup('Location: lat: ' + e.latlng.lat.toFixed(5) + ', lng: ' + e.latlng.lng.toFixed(5)).openPopup();
             setTimeout(function () {
                 map.removeLayer(tempMarker);
-            }, 1000); // Remove the marker after 1 second
+            }, 3000); // Remove the marker after 3 second
         });
 
         var marker = L.marker([53.71, 7.28]);
